@@ -22,7 +22,7 @@ init -997 python in PuzzleMinigameEngine:
             self.part_pos = part_pos
             self.x, self.y = initial_pos
             self.width, self.height = width, height
-            self.image = im.Crop(image, (part_pos[0]*self.width, part_pos[1]*self.height, self.width, self.height))
+            self.image = im.Crop(image, (self.part_pos[0]*self.width, self.part_pos[1]*self.height, self.width, self.height))
 
 
         def render(self, width, height, st, at):
@@ -51,6 +51,23 @@ init -997 python in PuzzleMinigameEngine:
 
         def in_box(self, x, y):
             return self.x <= x <= self.x+self.width and self.y <= y <= self.y+self.height
+
+        @property
+        def right_x(self):
+            return self.part_pos[0]*self.width
+
+        @property
+        def right_y(self):
+            return self.part_pos[1]*self.height
+
+        def is_right_placed(self, pos):
+            x, y = pos
+            return abs(self.x-x-self.right_x) < PUZZLE_RIGHT_POS_OFFSET and abs(self.y-y-self.right_y) < PUZZLE_RIGHT_POS_OFFSET
+
+        def place_right(self, pos):
+            x, y = pos
+            self.x = self.right_x+x
+            self.y = self.right_y+y
 
 
     class PuzzleMinigameHandler(renpy.Displayable):
@@ -120,6 +137,13 @@ init -997 python in PuzzleMinigameEngine:
             self.parts.append(part)
             self.selected = True
 
+
+        @property
+        def selected_part(self):
+            if self.selected:
+                return self.parts[-1]
+            return None
+
         def event(self, ev, x, y, st):
 
             if renpy.map_event(ev, ["mousedown_1"]):
@@ -129,10 +153,17 @@ init -997 python in PuzzleMinigameEngine:
                     self.selected_offset = x-part.x, y-part.y
                 renpy.redraw(self, 0)
             elif renpy.map_event(ev, ["mouseup_1"]):
+                board_offset = align_pos((.5, .5), self.full_size)
+                if self.selected and self.selected_part.is_right_placed(board_offset):
+                    self.selected_part.place_right(board_offset)
+                
                 self.selected = False
+                renpy.redraw(self, 0)
+
+
             elif self.selected:
-                self.parts[-1].x = x-self.selected_offset[0]
-                self.parts[-1].y = y-self.selected_offset[1]
+                self.selected_part.x = x-self.selected_offset[0]
+                self.selected_part.y = y-self.selected_offset[1]
                 renpy.redraw(self, 0)
             return
 
