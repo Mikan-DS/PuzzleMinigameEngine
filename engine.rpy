@@ -36,7 +36,7 @@ init -997 python in PuzzleMinigameEngine:
                     height,
                     st, at
                 ),
-                (0, 9)
+                (0, 0)
             )
 
             return render
@@ -77,7 +77,7 @@ init -997 python in PuzzleMinigameEngine:
 
             self.image = image
 
-            self.full_size = renpy.image_size(self.image)
+            self.full_size = list(renpy.image_size(self.image))
 
             
             self.parts = []
@@ -85,14 +85,18 @@ init -997 python in PuzzleMinigameEngine:
             self.segment_width = 100
             self.segment_height = 100
 
+            self.full_size[0] -= int(self.full_size[0]%self.segment_width)
+            self.full_size[1] -= int(self.full_size[1]%self.segment_height)
+
+
             qty = 1
 
             self.selected = True
             self.selected_offset = (0, 0)
 
 
-            for y in range(self.full_size[1]//self.segment_height-1):
-                for x in range(self.full_size[0]//self.segment_width-1):
+            for y in range(self.full_size[1]//self.segment_height):
+                for x in range(self.full_size[0]//self.segment_width):
                     qty += 1
                     self.parts.append(
                         PuzzleElement(
@@ -101,6 +105,7 @@ init -997 python in PuzzleMinigameEngine:
                             random_pos((self.segment_width, self.segment_height)),
                             self.segment_width, self.segment_height)
                     )
+
 
         def render(self, width, height, st, at):
             render = renpy.Render(width, height)
@@ -122,6 +127,7 @@ init -997 python in PuzzleMinigameEngine:
                     ),
                     part.pos
                 )
+                print(part.pos, align_pos((.5, .5), self.full_size))
 
             return render
 
@@ -166,6 +172,10 @@ init -997 python in PuzzleMinigameEngine:
                 self.selected_part.y = y-self.selected_offset[1]
                 renpy.redraw(self, 0)
             return
+
+        # def is_finished(self):
+        #     for part in parts:
+
 
 
             
