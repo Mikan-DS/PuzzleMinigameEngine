@@ -1,0 +1,6 @@
+*.rpyc
+*.rpymc
+*.0rpy
+**/.DS_Store
+*.zip
+*.rar
