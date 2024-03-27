@@ -1,6 +1,7 @@
 init -997 python in PuzzleMinigameEngine:
 
     from store import build, im, Text, Solid, Image, config
+    from math import sqrt
 
     build.classify('game/plugins/PuzzleMinigameEngine/*.rpy', None)
 
@@ -82,7 +83,11 @@ init -997 python in PuzzleMinigameEngine:
             
             self.parts = []
 
-            self.segment_size = 150
+            parts_count = 200
+            r = self.full_size[0]/self.full_size[1]
+
+
+            self.segment_size = int(self.full_size[1]/sqrt(parts_count/r))
 
             self.segment_width = self.segment_size
             self.segment_height = self.segment_size
@@ -108,6 +113,9 @@ init -997 python in PuzzleMinigameEngine:
                             random_pos((self.segment_width, self.segment_height), (400, config.screen_height)),
                             self.segment_width, self.segment_height)
                     )
+
+            renpy.random.shuffle(self.parts)
+            CitrusPluginSupport.log("Create puzzle with %d elements"%qty, plugin_config["name"])
 
 
         def render(self, width, height, st, at):
