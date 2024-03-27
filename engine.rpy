@@ -82,8 +82,10 @@ init -997 python in PuzzleMinigameEngine:
             
             self.parts = []
 
-            self.segment_width = 100
-            self.segment_height = 100
+            self.segment_size = 150
+
+            self.segment_width = self.segment_size
+            self.segment_height = self.segment_size
 
             self.full_size[0] -= int(self.full_size[0]%self.segment_width)
             self.full_size[1] -= int(self.full_size[1]%self.segment_height)
@@ -91,8 +93,9 @@ init -997 python in PuzzleMinigameEngine:
 
             qty = 1
 
-            self.selected = True
+            self.selected = False
             self.selected_offset = (0, 0)
+            self.is_finished = False
 
 
             for y in range(self.full_size[1]//self.segment_height):
@@ -102,7 +105,7 @@ init -997 python in PuzzleMinigameEngine:
                         PuzzleElement(
                             self.image,
                             (x, y),
-                            random_pos((self.segment_width, self.segment_height)),
+                            random_pos((self.segment_width, self.segment_height), (400, config.screen_height)),
                             self.segment_width, self.segment_height)
                     )
 
@@ -127,7 +130,6 @@ init -997 python in PuzzleMinigameEngine:
                     ),
                     part.pos
                 )
-                print(part.pos, align_pos((.5, .5), self.full_size))
 
             return render
 
@@ -160,22 +162,35 @@ init -997 python in PuzzleMinigameEngine:
                 renpy.redraw(self, 0)
             elif renpy.map_event(ev, ["mouseup_1"]):
                 board_offset = align_pos((.5, .5), self.full_size)
-                if self.selected and self.selected_part.is_right_placed(board_offset):
-                    self.selected_part.place_right(board_offset)
+                if self.selected:
+                    self.try_finish()
                 
                 self.selected = False
                 renpy.redraw(self, 0)
-
-
             elif self.selected:
                 self.selected_part.x = x-self.selected_offset[0]
                 self.selected_part.y = y-self.selected_offset[1]
                 renpy.redraw(self, 0)
             return
 
-        # def is_finished(self):
-        #     for part in parts:
+        def try_finish(self):
+            board_offset = align_pos((.5, .5), self.full_size)
+            for part in self.parts:
+                if not part.is_right_placed(board_offset):
+                    self.is_finished = False
+                    renpy.restart_interaction()
 
+                    return False
+            for part in self.parts:
+                part.place_right(board_offset)
+            self.is_finished = True
+            renpy.restart_interaction()
+            return True
+
+        def finish_all(self):
+            board_offset = align_pos((.5, .5), self.full_size)
+            for part in self.parts:
+                part.place_right(board_offset) 
 
 
             

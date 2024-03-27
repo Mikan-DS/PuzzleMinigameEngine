@@ -1,2 +1,2 @@
 init -999 python in PuzzleMinigameEngine:
-    PUZZLE_RIGHT_POS_OFFSET = 100
+    PUZZLE_RIGHT_POS_OFFSET = 15

@@ -1,7 +1,7 @@
 init -998 python in PuzzleMinigameEngine:
     import store
     plugin_config = {
-        "version": "0.24.03.27.1",
+        "version": "0.24.03.27.2",
         "name": "PuzzleMinigameEngine",
         "order": 0
     }
