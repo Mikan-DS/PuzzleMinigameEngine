@@ -83,7 +83,7 @@ init -997 python in PuzzleMinigameEngine:
             
             self.parts = []
 
-            parts_count = 200
+            parts_count = 50
             r = self.full_size[0]/self.full_size[1]
 
 
@@ -164,13 +164,16 @@ init -997 python in PuzzleMinigameEngine:
 
             if renpy.map_event(ev, ["mousedown_1"]):
                 part = self.find_hovered_part(x, y)
-                if part:
+                if part and not part.is_right_placed(align_pos((.5, .5), self.full_size)):
                     self.set_part_active(part)
                     self.selected_offset = x-part.x, y-part.y
                 renpy.redraw(self, 0)
             elif renpy.map_event(ev, ["mouseup_1"]):
                 board_offset = align_pos((.5, .5), self.full_size)
+
                 if self.selected:
+                    if self.selected_part.is_right_placed(board_offset):
+                        self.selected_part.place_right(board_offset)
                     self.try_finish()
                 
                 self.selected = False
