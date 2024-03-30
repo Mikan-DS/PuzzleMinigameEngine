@@ -131,7 +131,7 @@ init -995 python in PuzzleMinigameEngine:
             if renpy.map_event(ev, ["mousedown_1"]):
                 part = self.find_hovered_part(x, y)
                 if part:
-                    if FREEZE_AFTER_CORRECT_PLACE or not part.is_right_placed(align_pos((.5, .5), self.full_size)):
+                    if not FREEZE_AFTER_CORRECT_PLACE or not part.is_right_placed(align_pos((.5, .5), self.full_size)):
                         self.set_part_active(part)
                         self.selected_offset = x-part.x, y-part.y
                 renpy.redraw(self, 0)
