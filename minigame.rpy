@@ -49,7 +49,6 @@ init -995 python in PuzzleMinigameEngine:
                         part
                     )
                     new_parts.append(part)
-
                     if x:
                         if part.masks[0]:
                             part.outer_mask[0] = AlphaMask(
@@ -131,9 +130,10 @@ init -995 python in PuzzleMinigameEngine:
         def event(self, ev, x, y, st):
             if renpy.map_event(ev, ["mousedown_1"]):
                 part = self.find_hovered_part(x, y)
-                if part:# and not part.is_right_placed(align_pos((.5, .5), self.full_size))
-                    self.set_part_active(part)
-                    self.selected_offset = x-part.x, y-part.y
+                if part:
+                    if FREEZE_AFTER_CORRECT_PLACE or not part.is_right_placed(align_pos((.5, .5), self.full_size)):
+                        self.set_part_active(part)
+                        self.selected_offset = x-part.x, y-part.y
                 renpy.redraw(self, 0)
             elif renpy.map_event(ev, ["mouseup_1"]):
                 board_offset = align_pos((.5, .5), self.full_size)
