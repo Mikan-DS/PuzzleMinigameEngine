@@ -1,21 +1,15 @@
 init -995 python in PuzzleMinigameEngine:
-
-
     class PuzzleMinigame(renpy.Displayable):
         def __init__(self, image):
-
             super().__init__()
 
             self.image = image
-
             self.full_size = list(renpy.image_size(self.image))
 
-            
             self.parts = []
 
             parts_count = 50
             r = self.full_size[0]/self.full_size[1]
-
 
             self.segment_size = int(self.full_size[1]/sqrt(parts_count/r))
 
@@ -24,7 +18,6 @@ init -995 python in PuzzleMinigameEngine:
 
             self.full_size[0] -= int(self.full_size[0]%self.segment_width)
             self.full_size[1] -= int(self.full_size[1]%self.segment_height)
-
 
             qty = 1
 
@@ -59,23 +52,19 @@ init -995 python in PuzzleMinigameEngine:
                     last_x_mask = new_x_mask
                 old_parts = new_parts
                 last_y_mask = new_y_mask
-
                 last_x_mask = 0
 
             renpy.random.shuffle(self.parts)
             CitrusPluginSupport.log("Create puzzle with %d elements (%dx%d)"%(qty, x_max, y_max), plugin_config["name"])
 
-
         def render(self, width, height, st, at):
             render = renpy.Render(width, height)
-
             render.blit(
                 renpy.render(
                     Solid("550", xysize=self.full_size), width, height, st, at
                 ),
                 align_pos((.5, .5), self.full_size)
             )
-
             for part in self.parts:
                 render.blit(
                     renpy.render(
@@ -86,7 +75,6 @@ init -995 python in PuzzleMinigameEngine:
                     ),
                     part.pos
                 )
-
             return render
 
         def find_hovered_part(self, x, y):
@@ -95,12 +83,10 @@ init -995 python in PuzzleMinigameEngine:
                     return part
             return None
 
-
         def set_part_active(self, part):
             self.parts.remove(part)
             self.parts.append(part)
             self.selected = True
-
 
         @property
         def selected_part(self):
@@ -109,7 +95,6 @@ init -995 python in PuzzleMinigameEngine:
             return None
 
         def event(self, ev, x, y, st):
-
             if renpy.map_event(ev, ["mousedown_1"]):
                 part = self.find_hovered_part(x, y)
                 if part:# and not part.is_right_placed(align_pos((.5, .5), self.full_size))
@@ -118,12 +103,10 @@ init -995 python in PuzzleMinigameEngine:
                 renpy.redraw(self, 0)
             elif renpy.map_event(ev, ["mouseup_1"]):
                 board_offset = align_pos((.5, .5), self.full_size)
-
                 if self.selected:
                     if self.selected_part.is_right_placed(board_offset):
                         self.selected_part.place_right(board_offset)
                     self.try_finish()
-                
                 self.selected = False
                 renpy.redraw(self, 0)
             elif self.selected:
@@ -138,7 +121,6 @@ init -995 python in PuzzleMinigameEngine:
                 if not part.is_right_placed(board_offset):
                     self.is_finished = False
                     renpy.restart_interaction()
-
                     return False
             for part in self.parts:
                 part.place_right(board_offset)
