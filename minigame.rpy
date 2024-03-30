@@ -49,6 +49,40 @@ init -995 python in PuzzleMinigameEngine:
                         part
                     )
                     new_parts.append(part)
+
+                    if x:
+                        if part.masks[0]:
+                            part.outer_mask[0] = AlphaMask(
+                                Crop((
+                                        new_parts[x-1].width-new_parts[x-1].mask_height,
+                                        0,
+                                        new_parts[x-1].mask_height,
+                                        new_parts[x-1].height),
+                                    new_parts[x-1].original_image),
+                                Transform(part.mask, rotate=-90, rotate_pad=False)
+                                )
+                        if new_parts[x-1].masks[2]:
+                            print(x-1, y)
+                            new_parts[x-1].outer_mask[2] = AlphaMask(
+                                part.original_image,
+                                Transform(new_parts[x-1].mask, rotate=90, rotate_pad=False)
+                                )
+                    if y:
+                        if part.masks[1]:
+                            part.outer_mask[1] = AlphaMask(
+                                Crop((
+                                        0,
+                                        old_parts[x].height-old_parts[x].mask_height,
+                                        old_parts[x].width,
+                                        old_parts[x].mask_height),
+                                    old_parts[x].original_image),
+                                part.mask
+                                )
+                        if old_parts[x].masks[3]:
+                            old_parts[x].outer_mask[3] = AlphaMask(
+                                part.original_image,
+                                Transform(old_parts[x].mask, rotate=180, rotate_pad=False)
+                                )
                     last_x_mask = new_x_mask
                 old_parts = new_parts
                 last_y_mask = new_y_mask

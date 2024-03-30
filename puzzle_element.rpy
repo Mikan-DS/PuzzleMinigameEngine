@@ -34,8 +34,9 @@ init -996 python in PuzzleMinigameEngine:
                 )
                 self.masks[3] = False
 
+            self.original_image = Crop((self.part_pos[0]*self.width, self.part_pos[1]*self.height, self.width, self.height), image)
             self.image = AlphaMask(
-                Crop((self.part_pos[0]*self.width, self.part_pos[1]*self.height, self.width, self.height), image),
+                self.original_image,
                 Composite((self.width, self.height), *inner_mask),
                 invert=True
             )
@@ -46,7 +47,7 @@ init -996 python in PuzzleMinigameEngine:
             if self.masks[0]:
                 render.blit(
                     renpy.render(
-                        Transform(self.mask, rotate=-90, rotate_pad=False),
+                        self.outer_mask[0],#Transform(self.mask, rotate=-90, rotate_pad=False),
                         width,
                         height,
                         st, at
@@ -57,7 +58,7 @@ init -996 python in PuzzleMinigameEngine:
             if self.masks[1]:
                 render.blit(
                     renpy.render(
-                        self.mask,
+                        self.outer_mask[1],
                         width,
                         height,
                         st, at
@@ -67,7 +68,7 @@ init -996 python in PuzzleMinigameEngine:
             if self.masks[2]:
                 render.blit(
                     renpy.render(
-                        Transform(self.mask, rotate=90, rotate_pad=False),
+                        self.outer_mask[2],
                         width,
                         height,
                         st, at
@@ -78,7 +79,7 @@ init -996 python in PuzzleMinigameEngine:
             if self.masks[3]:
                 render.blit(
                     renpy.render(
-                        Transform(self.mask, rotate=180, rotate_pad=False),
+                        self.outer_mask[3],
                         width,
                         height,
                         st, at
