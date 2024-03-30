@@ -1,6 +1,6 @@
 init -997 python in PuzzleMinigameEngine:
 
-    from store import build, im, Text, Solid, Image, config
+    from store import build, im, Text, Solid, Image, config, Transform, Composite, Crop, AlphaMask
     from math import sqrt
 
     build.classify('game/plugins/PuzzleMinigameEngine/*.rpy', None)
@@ -18,17 +18,105 @@ init -997 python in PuzzleMinigameEngine:
 
 
     class PuzzleElement(renpy.Displayable):
-        def __init__(self, image, part_pos, initial_pos, width, height):
+        def __init__(self, image, part_pos, initial_pos, width, height, masks):
             super().__init__()
             self.part_pos = part_pos
             self.x, self.y = initial_pos
             self.width, self.height = width, height
-            self.image = im.Crop(image, (self.part_pos[0]*self.width, self.part_pos[1]*self.height, self.width, self.height))
+            self.masks = list(masks)
+            mask_ratio = self.width/PUZZLE_MASK_SIZE[0]
+            self.mask_height = int(PUZZLE_MASK_SIZE[1]*mask_ratio)
+            self.mask = Transform(PUZZLE_MASK_IMAGE, zoom=mask_ratio)
 
+            inner_mask = []
+            self.outer_mask = [None, None, None, None]
+
+            if self.masks[0] == -1:
+                inner_mask.extend(
+                    ((0, 0), Transform(self.mask, rotate=90, rotate_pad=False))
+                )
+                self.masks[0] = False
+
+
+            if self.masks[1] == -1:
+                inner_mask.extend(
+                    ((0, 0), Transform(self.mask, rotate=180, rotate_pad=False))
+                )
+                self.masks[1] = False
+
+
+            if self.masks[2] == -1:
+                inner_mask.extend(
+                    ((self.width-self.mask_height, 0), Transform(self.mask, rotate=-90, rotate_pad=False))
+                )
+                self.masks[2] = False
+
+
+            if self.masks[3] == -1:
+                inner_mask.extend(
+                    ((0, self.height-self.mask_height), self.mask)
+                )
+                self.masks[3] = False
+
+
+            self.image = AlphaMask(
+                Crop((self.part_pos[0]*self.width, self.part_pos[1]*self.height, self.width, self.height), image),
+                Composite((self.width, self.height), *inner_mask),
+                invert=True
+            )
+
+        def set_outer_mask(self, masks):
+            pass
 
         def render(self, width, height, st, at):
 
             render = renpy.Render(width, height)
+
+            if self.masks[0]:
+                render.blit(
+                    renpy.render(
+                        Transform(self.mask, rotate=-90, rotate_pad=False),
+                        width,
+                        height,
+                        st, at
+                    ),
+                    (-self.mask_height, 0)
+                )   
+     
+
+            if self.masks[1]:
+                render.blit(
+                    renpy.render(
+                        self.mask,
+                        width,
+                        height,
+                        st, at
+                    ),
+                    (0, -self.mask_height)
+                ) 
+
+            if self.masks[2]:
+                render.blit(
+                    renpy.render(
+                        Transform(self.mask, rotate=90, rotate_pad=False),
+                        width,
+                        height,
+                        st, at
+                    ),
+                    (self.width, 0)
+
+                )   
+
+            if self.masks[3]:
+                render.blit(
+                    renpy.render(
+                        Transform(self.mask, rotate=180, rotate_pad=False),
+                        width,
+                        height,
+                        st, at
+                    ),
+                    (0, self.height)
+                )    
 
             render.blit(
                 renpy.render(
@@ -102,20 +190,38 @@ init -997 python in PuzzleMinigameEngine:
             self.selected_offset = (0, 0)
             self.is_finished = False
 
+            y_max = (self.full_size[1]//self.segment_height)-1
+            x_max = (self.full_size[0]//self.segment_width)-1
 
-            for y in range(self.full_size[1]//self.segment_height):
-                for x in range(self.full_size[0]//self.segment_width):
+            last_y_mask = [0]*(y_max+1)
+            last_x_mask = 0
+            old_parts = []
+
+            for y in range(y_max+1):
+                new_y_mask = [renpy.random.choice((-1, 1)) for _ in range(x_max+1)]
+                new_parts = []
+                for x in range(x_max+1):
                     qty += 1
-                    self.parts.append(
-                        PuzzleElement(
+                    new_x_mask = renpy.random.choice((-1, 1))
+                    part = PuzzleElement(
                             self.image,
                             (x, y),
                             random_pos((self.segment_width, self.segment_height), (400, config.screen_height)),
-                            self.segment_width, self.segment_height)
+                            self.segment_width, self.segment_height,
+                            (-last_x_mask, -last_y_mask[x], (0 if x==x_max else new_x_mask), (0 if y==y_max else new_y_mask[x]))
+                            )
+                    self.parts.append(
+                        part
                     )
+                    new_parts.append(part)
+                    last_x_mask = new_x_mask
+                old_parts = new_parts
+                last_y_mask = new_y_mask
+
+                last_x_mask = 0
 
             renpy.random.shuffle(self.parts)
-            CitrusPluginSupport.log("Create puzzle with %d elements"%qty, plugin_config["name"])
+            CitrusPluginSupport.log("Create puzzle with %d elements (%dx%d)"%(qty, x_max, y_max), plugin_config["name"])
 
 
         def render(self, width, height, st, at):
@@ -164,7 +270,7 @@ init -997 python in PuzzleMinigameEngine:
 
             if renpy.map_event(ev, ["mousedown_1"]):
                 part = self.find_hovered_part(x, y)
-                if part and not part.is_right_placed(align_pos((.5, .5), self.full_size)):
+                if part:# and not part.is_right_placed(align_pos((.5, .5), self.full_size))
                     self.set_part_active(part)
                     self.selected_offset = x-part.x, y-part.y
                 renpy.redraw(self, 0)
