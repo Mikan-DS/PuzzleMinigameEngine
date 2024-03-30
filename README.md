@@ -27,3 +27,9 @@ This is a plugin for Renpy, it needs to be cloned/added as a submodule to the pl
 - `FREEZE_AFTER_CORRECT_PLACE`
 (По умолчанию True)
 Этот флаг отвечает за возможность передвигать паззлы после того как они встали на правильное место
+- `PUZZLE_MASK_SHADOW`
+(по умолчанию путь "plugins/PuzzleMinigameEngine/images/outer_mask_shadow.png")
+Это путь до картинки которая является тенью (или блеском) для "отступов" паззлов.
+- `PUZZLE_SHADOW`
+(по умолчанию путь "plugins/PuzzleMinigameEngine/images/puzzle_shadow.png")
+Это путь до картинки которая является  тенью (или блеском) паззлов.

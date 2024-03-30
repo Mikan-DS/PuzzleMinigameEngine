@@ -9,6 +9,8 @@ init -996 python in PuzzleMinigameEngine:
             mask_ratio = self.width/PUZZLE_MASK_SIZE[0]
             self.mask_height = int(PUZZLE_MASK_SIZE[1]*mask_ratio)
             self.mask = Transform(PUZZLE_MASK_IMAGE, zoom=mask_ratio)
+            self.mask_shadow = Transform(PUZZLE_MASK_SHADOW, zoom=mask_ratio)
+            self.shadow = Transform(PUZZLE_SHADOW, zoom=mask_ratio)
 
             inner_mask = []
             self.outer_mask = [None, None, None, None]
@@ -53,12 +55,30 @@ init -996 python in PuzzleMinigameEngine:
                         st, at
                     ),
                     (-self.mask_height, 0)
-                )   
+                )
+                render.blit(
+                    renpy.render(
+                        Transform(self.mask_shadow, rotate=-90, rotate_pad=False),
+                        width,
+                        height,
+                        st, at
+                    ),
+                    (-self.mask_height, 0)
+                )
      
             if self.masks[1]:
                 render.blit(
                     renpy.render(
                         self.outer_mask[1],
+                        width,
+                        height,
+                        st, at
+                    ),
+                    (0, -self.mask_height)
+                )
+                render.blit(
+                    renpy.render(
+                        self.mask_shadow,
                         width,
                         height,
                         st, at
@@ -74,7 +94,15 @@ init -996 python in PuzzleMinigameEngine:
                         st, at
                     ),
                     (self.width, 0)
-
+                )
+                render.blit(
+                    renpy.render(
+                        Transform(self.mask_shadow, rotate=90, rotate_pad=False),
+                        width,
+                        height,
+                        st, at
+                    ),
+                    (self.width, 0)
                 )
             if self.masks[3]:
                 render.blit(
@@ -86,9 +114,28 @@ init -996 python in PuzzleMinigameEngine:
                     ),
                     (0, self.height)
                 )
+                render.blit(
+                    renpy.render(
+                        Transform(self.mask_shadow, rotate=180, rotate_pad=False),
+                        width,
+                        height,
+                        st, at
+                    ),
+                    (0, self.height)
+                )
             render.blit(
                 renpy.render(
                     self.image,
+                    width,
+                    height,
+                    st, at
+                ),
+                (0, 0)
+            )
+
+            render.blit(
+                renpy.render(
+                    self.shadow,
                     width,
                     height,
                     st, at
