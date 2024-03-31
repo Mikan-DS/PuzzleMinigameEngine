@@ -61,7 +61,6 @@ init -995 python in PuzzleMinigameEngine:
                                 Transform(part.mask, rotate=-90, rotate_pad=False)
                                 )
                         if new_parts[x-1].masks[2]:
-                            print(x-1, y)
                             new_parts[x-1].outer_mask[2] = AlphaMask(
                                 part.original_image,
                                 Transform(new_parts[x-1].mask, rotate=90, rotate_pad=False)
@@ -88,7 +87,7 @@ init -995 python in PuzzleMinigameEngine:
                 last_x_mask = 0
 
             renpy.random.shuffle(self.parts)
-            CitrusPluginSupport.log("Create puzzle with %d elements (%dx%d)"%(qty, x_max, y_max), plugin_config["name"])
+            log("Create puzzle with %d elements (%dx%d)"%(qty, x_max, y_max))
 
         def render(self, width, height, st, at):
             render = renpy.Render(width, height)
