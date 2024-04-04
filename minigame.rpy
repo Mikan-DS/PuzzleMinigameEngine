@@ -86,6 +86,8 @@ init -995 python in PuzzleMinigameEngine:
                 last_y_mask = new_y_mask
                 last_x_mask = 0
 
+            self.puzzle_carousel = PuzzleCarousel(qty, self.segment_size)
+
             renpy.random.shuffle(self.parts)
             log("Create puzzle with %d elements (%dx%d)"%(qty, x_max, y_max))
 
@@ -107,6 +109,14 @@ init -995 python in PuzzleMinigameEngine:
                     ),
                     part.pos
                 )
+
+            # render.blit(
+            #     renpy.render(
+            #         self.puzzle_carousel, width, height, st, at
+            #     ),
+            #     (0, 0)
+            # )
+
             return render
 
         def find_hovered_part(self, x, y):
