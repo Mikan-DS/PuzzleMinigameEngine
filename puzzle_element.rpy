@@ -49,7 +49,7 @@ init -996 python in PuzzleMinigameEngine:
             if self.masks[0]:
                 render.blit(
                     renpy.render(
-                        self.outer_mask[0],#Transform(self.mask, rotate=-90, rotate_pad=False),
+                        self.outer_mask[0],
                         width,
                         height,
                         st, at

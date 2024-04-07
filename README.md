@@ -33,3 +33,17 @@ This is a plugin for Renpy, it needs to be cloned/added as a submodule to the pl
 - `PUZZLE_SHADOW`
 (по умолчанию путь "plugins/PuzzleMinigameEngine/images/puzzle_shadow.png")
 Это путь до картинки которая является  тенью (или блеском) паззлов.
+- `BOARD_PLACE`
+(по умолчанию (.5, 0.0))
+Этот параметр контролирует положение доски в процентах.
+- `RANDOM_INITIAL_PLACE_OFFSET`
+(по умолчанию 230)
+Этот параметр контролирует начальное случайное положение пазлов на экране.
+- `RANDOM_INITIAL_PLACE_BOTH_SIDES`
+(по умолчанию True)
+Если установлено значение True, пазлы будут размещаться с обеих сторон.
+- `RANDOM_INITIAL_PLACE_DOWN_OFFSET`
+(по умолчанию 250)
+Если значение не равно 0, пазлы будут располагаться по всей ширине с нижней полосы.
+
+

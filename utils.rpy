@@ -14,7 +14,7 @@ init -997 python in PuzzleMinigameEngine:
     def random_pos(element_size, container_size=None):
         if not container_size:
             container_size = (config.screen_width, config.screen_height)
-        return renpy.random.randint(0, container_size[0]-element_size[0]), renpy.random.randint(0, container_size[1]-element_size[1])
+        return [renpy.random.randint(0, container_size[0]-element_size[0]), renpy.random.randint(0, container_size[1]-element_size[1])]
 
 
 

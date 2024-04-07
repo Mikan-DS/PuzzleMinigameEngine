@@ -8,7 +8,7 @@ screen PuzzleMinigameEngineDemo:
 
     tag menu
 
-    default puzzles = PuzzleMinigameEngine.PuzzleMinigame("plugins/PuzzleMinigameEngine/demo/demo_2b.png")
+    default puzzles = PuzzleMinigameEngine.PuzzleMinigame("plugins/PuzzleMinigameEngine/demo/demo_nier.png")
 
     add puzzles
 

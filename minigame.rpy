@@ -28,7 +28,7 @@ init -995 python in PuzzleMinigameEngine:
             y_max = (self.full_size[1]//self.segment_height)-1
             x_max = (self.full_size[0]//self.segment_width)-1
 
-            last_y_mask = [0]*(y_max+1)
+            last_y_mask = [0]*(x_max+1)
             last_x_mask = 0
             old_parts = []
 
@@ -38,10 +38,16 @@ init -995 python in PuzzleMinigameEngine:
                 for x in range(x_max+1):
                     qty += 1
                     new_x_mask = renpy.random.choice((-1, 1))
+                    part_pos = random_pos((self.segment_width, self.segment_height), (RANDOM_INITIAL_PLACE_OFFSET, config.screen_height))
+                    if RANDOM_INITIAL_PLACE_BOTH_SIDES and renpy.random.choice((False, True)):
+                        part_pos[0] += config.screen_width - RANDOM_INITIAL_PLACE_OFFSET
+                    elif RANDOM_INITIAL_PLACE_DOWN_OFFSET and renpy.random.choice((False, True)):
+                        part_pos = random_pos((self.segment_width, self.segment_height), (config.screen_width, RANDOM_INITIAL_PLACE_DOWN_OFFSET))
+                        part_pos[1] += config.screen_height-RANDOM_INITIAL_PLACE_DOWN_OFFSET
                     part = PuzzleElement(
                             self.image,
                             (x, y),
-                            random_pos((self.segment_width, self.segment_height), (400, config.screen_height)),
+                            part_pos,
                             self.segment_width, self.segment_height,
                             (-last_x_mask, -last_y_mask[x], (0 if x==x_max else new_x_mask), (0 if y==y_max else new_y_mask[x]))
                             )
@@ -95,7 +101,7 @@ init -995 python in PuzzleMinigameEngine:
                 renpy.render(
                     Solid("550", xysize=self.full_size), width, height, st, at
                 ),
-                align_pos((.5, .5), self.full_size)
+                align_pos(BOARD_PLACE, self.full_size)
             )
             for part in self.parts:
                 render.blit(
@@ -130,12 +136,12 @@ init -995 python in PuzzleMinigameEngine:
             if renpy.map_event(ev, ["mousedown_1"]):
                 part = self.find_hovered_part(x, y)
                 if part:
-                    if not FREEZE_AFTER_CORRECT_PLACE or not part.is_right_placed(align_pos((.5, .5), self.full_size)):
+                    if not FREEZE_AFTER_CORRECT_PLACE or not part.is_right_placed(align_pos(BOARD_PLACE, self.full_size)):
                         self.set_part_active(part)
                         self.selected_offset = x-part.x, y-part.y
                 renpy.redraw(self, 0)
             elif renpy.map_event(ev, ["mouseup_1"]):
-                board_offset = align_pos((.5, .5), self.full_size)
+                board_offset = align_pos(BOARD_PLACE, self.full_size)
                 if self.selected:
                     if self.selected_part.is_right_placed(board_offset):
                         self.selected_part.place_right(board_offset)

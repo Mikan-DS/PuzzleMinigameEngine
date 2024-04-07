@@ -5,5 +5,11 @@ init -999 python in PuzzleMinigameEngine:
     PUZZLE_MASK_SHADOW = "plugins/PuzzleMinigameEngine/images/outer_mask_shadow.png"
     PUZZLE_SHADOW = "plugins/PuzzleMinigameEngine/images/puzzle_shadow.png"
 
+    BOARD_PLACE = (.5, 0.0)
+    RANDOM_INITIAL_PLACE_OFFSET = 230
+    RANDOM_INITIAL_PLACE_BOTH_SIDES = True
+    RANDOM_INITIAL_PLACE_DOWN_OFFSET = 250
+
 
     PUZZLE_MASK_SIZE = renpy.image_size(PUZZLE_MASK_IMAGE)
+
