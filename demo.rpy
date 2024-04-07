@@ -1,6 +1,7 @@
 
 init python in PuzzleMinigameEngine:
     build.classify('plugins/PuzzleMinigameEngine/demo.rpyc', None)
+    build.classify('plugins/PuzzleMinigameEngine/demo/*', None)
 
     FREEZE_AFTER_CORRECT_PLACE = False
 
