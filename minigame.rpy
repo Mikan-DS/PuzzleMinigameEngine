@@ -103,6 +103,7 @@ init -995 python in PuzzleMinigameEngine:
                 ),
                 align_pos(BOARD_PLACE, self.full_size)
             )
+            print(self.parts[0].pos, self.parts[0].part_pos)
             for part in self.parts:
                 render.blit(
                     renpy.render(
@@ -144,7 +145,14 @@ init -995 python in PuzzleMinigameEngine:
                 board_offset = align_pos(BOARD_PLACE, self.full_size)
                 if self.selected:
                     if self.selected_part.is_right_placed(board_offset):
-                        self.selected_part.place_right(board_offset)
+                        selected_part = self.selected_part
+                        selected_part.place_right(board_offset)
+                        print(len(self.parts))
+                        self.parts.remove(selected_part)
+                        self.parts.insert(0, selected_part)
+                        print(selected_part.pos, selected_part.part_pos)
+
+                        print(len(self.parts))
                     self.try_finish()
                 self.selected = False
                 renpy.redraw(self, 0)
@@ -155,7 +163,7 @@ init -995 python in PuzzleMinigameEngine:
             return
 
         def try_finish(self):
-            board_offset = align_pos((.5, .5), self.full_size)
+            board_offset = align_pos(BOARD_PLACE, self.full_size)
             for part in self.parts:
                 if not part.is_right_placed(board_offset):
                     self.is_finished = False
@@ -168,6 +176,6 @@ init -995 python in PuzzleMinigameEngine:
             return True
 
         def finish_all(self):
-            board_offset = align_pos((.5, .5), self.full_size)
+            board_offset = align_pos(BOARD_PLACE, self.full_size)
             for part in self.parts:
                 part.place_right(board_offset) 

@@ -12,8 +12,6 @@ screen PuzzleMinigameEngineDemo:
 
     add puzzles
 
-    # text "[puzzles.is_finished]"
-
     if puzzles.is_finished:
         textbutton "Готово":
             if main_menu:
