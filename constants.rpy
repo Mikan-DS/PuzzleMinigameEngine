@@ -10,6 +10,6 @@ init -999 python in PuzzleMinigameEngine:
     RANDOM_INITIAL_PLACE_BOTH_SIDES = True
     RANDOM_INITIAL_PLACE_DOWN_OFFSET = 250
 
-
+init -997 python in PuzzleMinigameEngine:
     PUZZLE_MASK_SIZE = renpy.image_size(PUZZLE_MASK_IMAGE)
 
