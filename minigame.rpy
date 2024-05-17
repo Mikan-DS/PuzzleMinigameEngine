@@ -1,14 +1,13 @@
 init -995 python in PuzzleMinigameEngine:
     class PuzzleMinigame(renpy.Displayable):
-        def __init__(self, image):
+        def __init__(self, image, parts_count = 50):
             super().__init__()
 
             self.image = image
             self.full_size = list(renpy.image_size(self.image))
 
             self.parts = []
-
-            parts_count = 50
+            
             r = self.full_size[0]/self.full_size[1]
 
             self.segment_size = int(self.full_size[1]/sqrt(parts_count/r))
@@ -99,7 +98,7 @@ init -995 python in PuzzleMinigameEngine:
             render = renpy.Render(width, height)
             render.blit(
                 renpy.render(
-                    Solid("550", xysize=self.full_size), width, height, st, at
+                    BOARD_BACKGROUND, self.full_size[0], self.full_size[1], st, at
                 ),
                 align_pos(BOARD_PLACE, self.full_size)
             )

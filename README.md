@@ -45,5 +45,10 @@ This is a plugin for Renpy, it needs to be cloned/added as a submodule to the pl
 - `RANDOM_INITIAL_PLACE_DOWN_OFFSET`
 (по умолчанию 250)
 Если значение не равно 0, пазлы будут располагаться по всей ширине с нижней полосы.
+- `BOARD_BACKGROUND`
+(по умолчанию "#4981C160")
+Цвет заливки фона поля картинки
+
+
 
 

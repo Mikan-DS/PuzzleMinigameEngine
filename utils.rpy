@@ -1,6 +1,6 @@
 init -997 python in PuzzleMinigameEngine:
 
-    from store import build, im, Text, Solid, Image, config, Transform, Composite, Crop, AlphaMask
+    from store import build, im, Text, config, Transform, Composite, Crop, AlphaMask
     from math import sqrt
 
     build.classify('game/plugins/PuzzleMinigameEngine/*.rpy', None)
